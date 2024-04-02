@@ -11,6 +11,19 @@ var seat_pos : = Vector2.ZERO
 var path : = []
 var path_tolerance : = 16.0
 
+var order_choices : = [
+	"PIZZA",
+	"OTHER"
+]
+var order_modifiers : = [
+	"Block Text",
+	"Lengthy Pleasantries",
+	"Math numbers"
+]
+
+var eating_time : = Vector2(1.0, 4.0)
+var current_eating_time : = randf_range(eating_time.x, eating_time.y)
+
 func _ready():
 	#Pick a seat
 	var seats_list : = seats_node.get_children()
@@ -26,7 +39,12 @@ func _process(delta):
 	
 		if global_position.distance_to(path[0]) < path_tolerance:
 			path.pop_front()
-			
+	
+	if global_position.distance_to(seat_pos) < path_tolerance:
+		current_eating_time -= delta
+		if current_eating_time <= 0.0:
+			find_path_to(get_global_mouse_position())
+			current_eating_time = randf_range(eating_time.x, eating_time.y)
 	velocity *= (1.0 - friction)
 	move_and_slide()
 	
